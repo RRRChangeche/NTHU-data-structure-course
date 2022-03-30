@@ -2,6 +2,18 @@
 #include <algorithm>
 using namespace std;
 
+// define ChangeSIze1D function template
+template<class T>
+void ChangeSize1D(T* &arr,const int& size,const int& ToSize){
+      T* tmp = new T[size];
+      tmp = arr;
+      arr = new T[ToSize];
+      for(int i=0; i< size; ++i){
+        arr[i] = tmp[i];
+      }
+      delete[] tmp;
+}
+
 // function template
 template <class T>
 T sum(T* data, const int SIZE){
@@ -57,7 +69,7 @@ inline T& Bag<T>::Element() const {
 
 template <class T>
 void Bag<T>::push(const T& x){
-    // if (capacity == top+1) ChangeSize1D(array, capacity, 2*capacity);
+    if (capacity == top+1) ChangeSize1D(array, capacity, 2*capacity);
     capacity *= 2;
     cout << "before: " << top << endl;
     array[++top] = x;
@@ -70,18 +82,6 @@ void Bag<T>::pop(){
     int deletePos = top/2;  // always delete the middle element
     copy(array+deletePos+1, array+top+1, array+deletePos);
     top--;
-}
-
-// define ChangeSIze1D function template
-template<class T>
-void ChangeSize1D(T* &arr,const int& size,const int& ToSize){
-      T* tmp = new T[size];
-      tmp = arr;
-      arr = new T[ToSize];
-      for(int i=0; i< size; ++i){
-      arr[i] = tmp[i];
-      }
-      delete[] tmp;
 }
 
 
