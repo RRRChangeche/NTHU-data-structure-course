@@ -28,7 +28,7 @@ public:
     void InsertFront(const T&);
     void Delete(ChainNode<T>*, ChainNode<T>*);
     void Concatenate(Chain<T>&);
-    void Reverse(void);
+    void Reverse();
     void Print();
 
 private:
@@ -86,8 +86,9 @@ void Chain<T>::Concatenate(Chain<T>& x){
 }
 
 template <class T>
-void Chain<T>::Reverse(void){
-    ChainNode<T>* current = first, previous = NULL;
+void Chain<T>::Reverse(){
+    ChainNode<T>* current = first;
+    ChainNode<T>* previous = NULL;
     while(current){
         ChainNode<T>* r = previous;
         previous = current;
@@ -127,9 +128,9 @@ int main () {
     list.Print();        // 印出:  5 3 4
     // list.Push_front(8);  // list: 8 5 3 4
     // list.Print();        // 印出:  8 5 3 4
-    // list.Reverse();      // list: 4 3 5 8
-    // list.Print();        // 印出:  4 3 5 8
+    list.Reverse();      // list: 4 3 5 8
+    list.Print();        // 印出:  4 3 5 8
     // list.Clear();        // 清空list
-    // list.Print();        // 印出: List is empty.
+    // list.Print();        // 印出: List is empty
     return 0;
 }
