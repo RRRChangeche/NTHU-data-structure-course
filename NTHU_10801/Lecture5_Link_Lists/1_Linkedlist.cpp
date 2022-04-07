@@ -1,4 +1,4 @@
-// Ref:
+// Ref: http://alrightchiu.github.io/SecondRound/linked-list-xin-zeng-zi-liao-shan-chu-zi-liao-fan-zhuan.html
 #include <iostream>
 using namespace std;
 
@@ -96,7 +96,7 @@ void Chain<T>::Delete(const T& x){
     }
     else{
         // 遍歷整個link list
-        while (current->data != x){
+        while (current != 0 && current->data != x){
             preNode = current;
             current = current->link;
         }
