@@ -27,8 +27,10 @@ public:
     void InsertBack(const T&);
     void InsertFront(const T&);
     void Delete(ChainNode<T>*, ChainNode<T>*);
+    void Delete(const T&);
     void Concatenate(Chain<T>&);
     void Reverse();
+    void Clear();
     void Print();
 
 private:
@@ -75,6 +77,49 @@ void Chain<T>::Delete(ChainNode<T>* target, ChainNode<T>* preNode){
 }
 
 template <class T>
+void Chain<T>::Delete(const T& x){
+    ChainNode<T>* current = first;
+    ChainNode<T>* preNode = 0;
+    // link list為空的情況
+    if (first == 0) {
+        cout << "Link list is empty!" << endl;
+        return;
+    }
+
+    // 找到x存在第一筆的情況
+    if (first->data == x){
+        cout << "found " << x << " at first and delete it!" << endl;
+        first = first->link;
+        delete current;
+        current = 0;
+        return;
+    }
+    else{
+        // 遍歷整個link list
+        while (current->data != x){
+            preNode = current;
+            current = current->link;
+        }
+
+        // list中不存在x
+        if (current == 0){
+            cout << "Cannot found " << x << " in list!" << endl;
+            return;
+        }
+        // list中存在x
+        else{
+            cout << "found " << x << " in list and delete it!" << endl;
+            preNode->link = current->link;
+            delete current;
+            current = 0;
+        }
+    }
+
+    
+}
+
+
+template <class T>
 void Chain<T>::Concatenate(Chain<T>& x){
     // b is concatenated to the end of *this
     // if non-empty chain
@@ -99,6 +144,16 @@ void Chain<T>::Reverse(){
 }
 
 template <class T>
+void Chain<T>::Clear(){
+    while(first != 0){
+        ChainNode<T>* current = first;
+        first = first->link;
+        delete current;
+        current = 0;
+    }
+}
+
+template <class T>
 void Chain<T>::Print(){
     if (first == 0) {
         cout << "Link list is empty!" << endl;
@@ -116,21 +171,21 @@ void Chain<T>::Print(){
 
 int main () {
     typedef Chain<int> LinkInt;
-    LinkInt list;          // 建立LinkedList的object
-    list.Print();        // 目前list是空的
-    list.InsertBack(5);   // list: 5
-    list.InsertBack(3);   // list: 5 3
-    list.InsertFront(9);  // list: 9 5 3
-    list.Print();        // 印出:  9 5 3
-    list.InsertBack(4);   // list: 9 5 3 4
-    // list.Delete(4);      // list是空的, 沒有4
-    // list.Delete(9);      // list: 5 3 4
-    list.Print();        // 印出:  5 3 4
-    // list.Push_front(8);  // list: 8 5 3 4
-    // list.Print();        // 印出:  8 5 3 4
-    list.Reverse();      // list: 4 3 5 8
-    list.Print();        // 印出:  4 3 5 8
-    // list.Clear();        // 清空list
-    // list.Print();        // 印出: List is empty
+    LinkInt list;           // 建立LinkedList的object
+    list.Print();           // 目前list是空的
+    list.InsertBack(5);     // list: 5
+    list.InsertBack(3);     // list: 5 3
+    list.InsertFront(9);    // list: 9 5 3
+    list.Print();           // 印出:  9 5 3
+    list.InsertBack(4);     // list: 9 5 3 4
+    list.Delete(4);         // list是空的, 沒有4
+    list.Delete(9);         // list: 5 3 4
+    list.Print();           // 印出:  5 3 4
+    list.InsertFront(8);    // list: 8 5 3 4
+    list.Print();           // 印出:  8 5 3 4
+    list.Reverse();         // list: 4 3 5 8
+    list.Print();           // 印出:  4 3 5 8
+    list.Clear();        // 清空list
+    list.Print();        // 印出: List is empty
     return 0;
 }
