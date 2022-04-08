@@ -1,6 +1,7 @@
 // Ref: http://alrightchiu.github.io/SecondRound/binary-tree-traversalxun-fang.html
 #include <iostream>
-#include <string>
+#include <stack>
+#include <queue>
 using namespace std;
 
 template <class T> class Tree; // forward declaration
@@ -28,12 +29,17 @@ public:
     Tree(TreeNode<T>* node) {root=node;}
 
     void Visit(TreeNode<T>*);
-    void InOrder();
-    void InOrder(TreeNode<T>*);
     void PreOrder();
     void PreOrder(TreeNode<T>*);
+    void InOrder();
+    void InOrder(TreeNode<T>*);
     void PostOrder();
     void PostOrder(TreeNode<T>*);
+    void NonRecPreOrder(TreeNode<T>*);
+    void NonRecInOrder(TreeNode<T>*);
+    void NonRecPostOrder(TreeNode<T>*);
+    void LevelOrder();
+    // void isEmpty();
     // void InsertBack(const T&);
     // void InsertFront(const T&);
     // void Delete(TreeNode<T>*, TreeNode<T>*);
@@ -45,6 +51,9 @@ public:
 
 private:
     TreeNode<T>* root;
+
+// public: 
+//     class 
 };
 
 
@@ -104,153 +113,101 @@ void Tree<T>::PostOrder(TreeNode<T>* node){
     }
 }
 
-// template <class T>
-// void Tree<T>::InsertBack(const T& e){
-//     if(first)   // non-empty chain
-//     {
-//         last->link = new TreeNode<T>(e);
-//         last = last->link;
-//         last->link = first;
-//     }
-//     else    // Insert into an empty chain
-//     {
-//         first = last = new TreeNode<T>(e);
-//         first->link = last;
-//         last->link = first;
-//     }
-// }
+template <class T>
+void Tree<T>::NonRecPreOrder(TreeNode<T>* node){
+    cout << "Non-recursive PreOrder: ";
+    stack<TreeNode<T>*> s;
+    TreeNode<T>* currentNode = node;
 
-// template <class T>
-// void Tree<T>::InsertFront(const T& e){
-//     TreeNode<T>* newNode = new TreeNode<T>(e);
-//     if(first)   // non-empty chain
-//     {
-//         newNode->link = first; // 接到頭
-//         // newNode->link = last->link; // 接到頭
-//         first = newNode;
-//         last->link = first;
-//     }
-//     else    // Insert into an empty chain
-//     {
-//         first = last = newNode;
-//         first->link = last;
-//         last->link = first;
-//     }
-// }
+    while(1){
+        while(currentNode){
+            Visit(currentNode);
+            s.push(currentNode->rightChild);
+            currentNode = currentNode->leftChild;
+        }
 
-// template <class T>
-// void Tree<T>::Delete(TreeNode<T>* target, TreeNode<T>* preNode){
-//     // target is node to be deleted, preNode is the node preceding target
-//     if(!target || !preNode) cout << "Cannot delete NULL nodes!" << endl;
-//     if (target == first) first = first->link;
-//     else preNode->link = target->link;
-//     delete target; target = NULL;
-// }
+        if (s.empty()) { cout << endl; return;}    // all nodes are visited
+        currentNode = s.top();
+        s.pop();
+    }
+    cout << endl;
+}
 
-// template <class T>
-// void Tree<T>::Delete(const T& x){
-//     TreeNode<T>* current = first;
-//     TreeNode<T>* preNode = 0;
-//     // link list為空的情況
-//     if (first == 0) {
-//         cout << "Link list is empty!" << endl;
-//         return;
-//     }
+template <class T>
+void Tree<T>::NonRecInOrder(TreeNode<T>* node){
+    cout << "Non-recursive InOrder: ";
+    stack<TreeNode<T>*> s;
+    TreeNode<T>* currentNode = node;
 
-//     // 找到x存在第一筆的情況
-//     if (first->data == x){
-//         cout << "found " << x << " at first and delete it!" << endl;
-//         first = first->link;
-//         delete current;
-//         current = 0;
-//         last->link = first;
-//         return;
-//     }
-//     else{
-//         // 遍歷整個link list
-//         while (current->link != first && current->data != x){
-//             preNode = current;
-//             current = current->link;
-//         }
+    while(1){
+        // 先找到最左邊的node, 沿途存入stack
+        while(currentNode){
+            s.push(currentNode);
+            currentNode = currentNode->leftChild;
+        }
 
-//         // list中不存在x
-//         if (current == 0){
-//             cout << "Cannot found " << x << " in list!" << endl;
-//             return;
-//         }
-//         // list中存在x, 且在最尾部
-//         else if (current->link == first)
-//         {
-//             cout << "found " << x << " in list and delete it!" << endl;
-//             preNode->link = current->link;
-//             delete current;
-//             current = 0;
-//             last = preNode;
-//             last->link = first;
-//         }
-//         // list中存在x, 且在中間
-//         else{
-//             cout << "found " << x << " in list and delete it!" << endl;
-//             preNode->link = current->link;
-//             delete current;
-//             current = 0;
-//         }
-//     }
-// }
+        // 如果stack為空則結束
+        if (s.empty()) { cout << endl; return;}    // all nodes are visited
+        currentNode = s.top();  // 取出stack最上面的node處理
+        s.pop();
+        Visit(currentNode);
+        currentNode = currentNode->rightChild;   // 將currentNode設為rightChild
+    }
+}
 
-// template <class T>
-// void Tree<T>::Concatenate(Tree<T>& x){
-//     // b is concatenated to the end of *this
-//     // if non-empty chain
-//     // 將chain的last node中的link指向x node的first node, 再將chain的last node 
-//     if(first) {last->link=x.first; last=x.last;}     
-//     // 如果chain是空的, 則chain=傳進來的chain
-//     else {last = x.last; first = x.first;}
-//     x.first = x.last = 0;
-// }
+// Ref: https://www.geeksforgeeks.org/iterative-postorder-traversal-using-stack/
+template <class T>
+void Tree<T>::NonRecPostOrder(TreeNode<T>* node){
+    cout << "Non-recursive PostOrder: ";
+    stack<TreeNode<T>*> s;
+    TreeNode<T>* currentNode = node;
 
-// template <class T>
-// void Tree<T>::Reverse(){
-//     TreeNode<T>* previous = NULL;
-//     TreeNode<T>* current = first;
-//     TreeNode<T>* next = first->link;
-//     while(next != first){
-//         current->link = previous;
-//         previous = current;
-//         current = next;
-//         next = next->link;
-//     }
-//     current->link = previous;   // current->link最後指向previous
-//     first->link = current;      // 將first->link指向尾部current
-//     last = first;               // 將尾部last node設為first
-//     first = current;            // 將頭部first node設為current
-//     cout << "Reverse the link list!" << endl;
-// }
+    while(1){
+        while(currentNode){
+            if (currentNode->rightChild) s.push(currentNode->rightChild);
+            s.push(currentNode);
+            currentNode = currentNode->leftChild;
+        }
 
-// template <class T>
-// void Tree<T>::Clear(){
-//     while(first != 0){
-//         TreeNode<T>* current = first;
-//         first = first->link;
-//         delete current;
-//         current = 0;
-//     }
-// }
+        currentNode = s.top();
+        s.pop();
+        if (s.empty()){
+            Visit(currentNode);
+            cout << endl;
+            return;
+        }
+        if (currentNode->rightChild && currentNode->rightChild == s.top()) 
+        {
+            s.pop();
+            s.push(currentNode);
+            currentNode = currentNode->rightChild;
+        }
+        else{
+            Visit(currentNode);
+            currentNode = NULL;
+        }
+    }
+}
 
-// template <class T>
-// void Tree<T>::Print(){
-//     if (first == 0) {
-//         cout << "Link list is empty!" << endl;
-//         return;
-//     }
-
-//     TreeNode<T>* current = first;
-//     do{
-//         cout << current->data << " ";
-//         current = current->link;
-//     } while(current != first);
-//     cout << endl;
-// }
+template <class T>
+void Tree<T>::LevelOrder(){
+    cout << "LevelOrder: ";
+    queue<TreeNode<T>*> q;
+    TreeNode<T>* currentNode = root;
+    while(currentNode){
+        // print currnet node
+        Visit(currentNode);
+        // push left/right into queue
+        if (currentNode->leftChild) q.push(currentNode->leftChild);
+        if (currentNode->rightChild) q.push(currentNode->rightChild);
+        // leave while loop when q is empty
+        if (q.empty()) return;
+        // pop front node in the queue and set as current node
+        currentNode = q.front();
+        q.pop();
+    }
+    cout << endl;
+}
 
 
 int main () {
@@ -273,13 +230,9 @@ int main () {
     T.PreOrder();
     T.InOrder();
     T.PostOrder();
-    // T.PreOrder(T.root);
-    // std::cout << std::endl;
-    // T.InOrder(T.root);
-    // std::cout << std::endl;
-    // T.PostOrder(T.root);
-    // std::cout << std::endl;
-    // T.LevelOrder();
-    // std::cout << std::endl;    
+    T.NonRecPreOrder(nodeA);
+    T.NonRecInOrder(nodeA);
+    T.NonRecPostOrder(nodeA);
+    T.LevelOrder();   
     return 0;
 }
