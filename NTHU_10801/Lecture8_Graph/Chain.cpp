@@ -119,10 +119,10 @@ void Chain<T>::Clear(){
 template <class T>
 int Chain<T>::Size(){
     int count = 0;
-    ChainNode<T> node = first;
+    ChainNode<T>* node = first;
     while (node){
         count++;
-        node = node.link;
+        node = node->link;
     }
     return count;
 }
