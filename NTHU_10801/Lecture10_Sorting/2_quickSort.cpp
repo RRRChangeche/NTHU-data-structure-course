@@ -1,3 +1,4 @@
+// Ref: http://alrightchiu.github.io/SecondRound/comparison-sort-quick-sortkuai-su-pai-xu-fa.html
 // Quick sort
 #include <iostream>
 using namespace std;
@@ -27,16 +28,16 @@ void swap(int* i, int* j){
 }
 
 int Partition(int* A, int front, int end){
-    int pivot = A[front];
-    int i = end+1;
-    for(int j=front+1; j<end; j++){
-        if (A[j] > pivot){
+    int pivot = A[front];           // 取第一筆當pivot
+    int i = end+1;                  // 設初始i=end+1, 當找到一個數>pivot則i--
+    for(int j=end; j>front; j--){   // 搜尋j=end到front+1
+        if (A[j] > pivot){          // 如果找到A[j] > pivot則i--, 然後swap(A[i], A[j])
             i--;
-            // swap(&A[i], &A[j]);
+            swap(A[i], A[j]);       
         }
     }
     i--;
-    // swap(&A[i], &A[front]);
+    swap(A[i], A[front]);           // 最後將pivot替換到i位置
     return i;
 }
 
@@ -62,8 +63,7 @@ int main(){
     // int A[n] = {9,8,7,6,5,1,1,1};
     int A[n] = {6,1,7,8,9,3,5,4,2};
 
-    swap(A[0], A[8]);
-    // quickSort(A, 0, 9);
+    quickSort(A, 0, 9);
     Print(A, n);
 
     return 0;
