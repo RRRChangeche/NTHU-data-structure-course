@@ -4,7 +4,7 @@
 #include <string>
 using namespace std;
 
-// Maximun Priority Queue (implememt by Max Heap)
+// Maximun Priority Queue (Max Heap)
 template <class T>
 class MaxPQ
 {
@@ -40,9 +40,10 @@ T& MaxPQ<T>::Top() const{
 
 template <class T>
 void MaxPQ<T>::Push(const T& e){
-    // Insert r into max heap
+    // Insert e into max heap
     int currentNode = ++heapSize;
 
+    // currentNode = 1 = root, currentNode/2 = parent Node < e then swap
     while(currentNode != 1 && heap[currentNode/2] < e){
         //  swap with parent node
         heap[currentNode] = heap[currentNode/2];
@@ -53,7 +54,7 @@ void MaxPQ<T>::Push(const T& e){
 
 template <class T>
 void MaxPQ<T>::Pop(){
-    if (isEmpty()) cout << "Heap is empty!" << endl;
+    if (isEmpty()) {cout << "Heap is empty!" << endl; return;}
     heap[1].~T();
     T lastNode = heap[heapSize--];
 
