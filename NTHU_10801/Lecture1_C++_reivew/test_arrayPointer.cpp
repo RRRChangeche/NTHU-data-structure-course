@@ -38,5 +38,9 @@ int main(){
     std::swap(A[2], A[7]);
     PrintArray(A, 9);
 
+    // fill 
+    int F[10] = {0};
+    PrintArray(F, 10); 
+
     return 0;
 }
