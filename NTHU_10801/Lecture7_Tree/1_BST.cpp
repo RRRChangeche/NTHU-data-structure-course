@@ -47,7 +47,10 @@ public:
         return count;
     };
  
-    E GetElement(){ return element;}
+    E GetElement(){ 
+        if (!this) throw "node is NULL\n";
+        return element;
+    }
 
 private:
     K key;
@@ -99,7 +102,7 @@ TreeNode<K,E>* BSTree<K,E>::GetByRecursive(const K& key){
 }
 
 template <class K, class E>
-TreeNode<K,E>* GetByRecursive(TreeNode<K,E>* node, const K& k){
+TreeNode<K,E>* BSTree<K,E>::GetByRecursive(TreeNode<K,E>* node, const K& k){
     if (!node) {
         cout << "Node not found!" << endl;
         return 0;
@@ -163,6 +166,23 @@ void BSTree<K,E>::Delete(const K& k){
 
     if (node){
         cout << "delete node with key=" <<node->key  << " in BST"<< endl;
+        // node is root
+        if (node == root) {
+            // delete node and replace by smallest node in right subtree
+            TreeNode<K,E>* lNode = node->leftChild;
+            TreeNode<K,E>* rNode = node->rightChild;
+            TreeNode<K,E>* sNode = node->rightChild;
+            if (!sNode) {root = node->leftChild; return;}   // no right child
+            while(sNode->leftChild){
+                sNode = sNode->leftChild;
+            } 
+            delete node;
+            node = NULL;
+            root = sNode;
+            root->leftChild = lNode;
+            root->rightChild = rNode;
+            return;
+        }
         // node with two children (non-leaf node)
         if (node->leftChild && node->rightChild){       
             // delete node and replace by smallest node in right subtree
@@ -197,7 +217,7 @@ void BSTree<K,E>::Delete(const K& k){
         }
     }
     else {                                              // key not found 
-        cout << "key not found in BST" << endl; 
+        cout << "key=" << k << " not found in BST" << endl; 
     }   
 }
 
@@ -205,7 +225,7 @@ void BSTree<K,E>::Delete(const K& k){
 int main () {
     // TreeNode instantiation
     typedef TreeNode<int, const char*> BSTNode;
-    BSTNode* nodeA = new BSTNode(9, "A"); BSTNode* nodeB = new BSTNode(8, "B");
+    BSTNode* nodeA = new BSTNode(9, "A"); BSTNode* nodeB = new BSTNode(15, "B");
     BSTNode* nodeC = new BSTNode(7, "C"); BSTNode* nodeD = new BSTNode(6, "D"); 
     BSTNode* nodeE = new BSTNode(5, "E"); BSTNode* nodeF = new BSTNode(4, "F"); 
     BSTNode* nodeG = new BSTNode(3, "G"); BSTNode* nodeH = new BSTNode(2, "H"); 
@@ -222,11 +242,21 @@ int main () {
     T.Insert(nodeH);
     T.Insert(nodeI);
     cout << T.Get(9)->GetElement() << endl;
-    cout << T.Get(8)->GetElement() << endl;
+    cout << T.Get(15)->GetElement() << endl;
     cout << T.GetByRank(2)->GetElement() << endl;
 
-    T.Delete(2);
-    cout << T.GetByRank(2)->GetElement() << endl;
+    // Delete
+    try{
+        T.Delete(9);
+        T.Delete(2);
+        cout << T.GetByRank(2)->GetElement() << endl;
+        T.Delete(7);
+        cout << T.GetByRank(7)->GetElement() << endl;       // This line can work
+        cout << T.GetByRank(9)->GetElement() << endl;       // This line cannot work, error!
+    }
+    catch (const char* msg){
+        cerr << msg << endl;
+    } 
     
     return 0;
 }
