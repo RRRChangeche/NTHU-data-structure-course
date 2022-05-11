@@ -1,4 +1,5 @@
-#include<iostream>
+#include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -38,9 +39,12 @@ int main(){
     std::swap(A[2], A[7]);
     PrintArray(A, 9);
 
-    // fill 
+    // initialize filling with 0 
     int F[10] = {0};
     PrintArray(F, 10); 
+
+    std::map<int, int> map;
+    cout << "map[1] " <<  map[1] << endl;
 
     return 0;
 }
