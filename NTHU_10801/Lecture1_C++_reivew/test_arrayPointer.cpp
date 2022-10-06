@@ -39,8 +39,14 @@ int main(){
     std::swap(A[2], A[7]);
     PrintArray(A, 9);
 
-    // initialize filling with 0 
-    int F[10] = {0};
+    // initialize filling with default value
+    // https://stackoverflow.com/a/1065800/6887021
+    cout << "initialize filling with default value\n";
+    // method 1
+    int F[10];
+    fill_n(F, 10, -1);
+    // method 2 (in gcc compiler not here)
+    // int F[10] = {[0 ... 9] = -1};
     PrintArray(F, 10); 
 
     std::map<int, int> map;

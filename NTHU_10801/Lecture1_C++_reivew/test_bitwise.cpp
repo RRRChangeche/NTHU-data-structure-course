@@ -1,6 +1,7 @@
 // Reference : https://web.ntnu.edu.tw/~algo/Bit.html
 #include <iostream>
-#include<bitset>
+#include <bitset>
+#include <unordered_map>
 using namespace std;
 
 void add(int& bitset, int element)
@@ -129,6 +130,12 @@ int main(){
     }
     cout << endl;
     
+
+    // << opertor
+    // 1 << n = 2^n
+    n = 3;
+    cout << "1<<n = " << (1<<n) << endl;
+
     return 0;
 }
 
